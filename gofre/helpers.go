@@ -7,20 +7,20 @@ import (
 	"path/filepath"
 )
 
-// Build a generic wrapper task
-func BuildWrapperTask(taskId string) Task {
+// BuildWrapperTask builds a generic wrapper task
+func BuildWrapperTask(taskID string) Task {
 	return Task{
-		Id: taskId,
+		ID: taskID,
 		Execute: func(task *Task, c chan bool) {
 			c <- true
 		},
 	}
 }
 
-// Build a generic task to create directories
-func BuildCreateDirectoryTask(taskId string, params map[string]interface{}) Task {
+// BuildCreateDirectoryTask builds a generic task to create directories
+func BuildCreateDirectoryTask(taskID string, params map[string]interface{}) Task {
 	return Task{
-		Id:     taskId,
+		ID:     taskID,
 		Params: params,
 		Execute: func(task *Task, c chan bool) {
 			path := filepath.Join(".", task.getParams()["directory"].(string))
@@ -35,10 +35,10 @@ func BuildCreateDirectoryTask(taskId string, params map[string]interface{}) Task
 	}
 }
 
-// Build a generic task to download files
-func BuildDownloadImageTask(taskId string, params map[string]interface{}) Task {
+// BuildDownloadImageTask builds a generic task to download files
+func BuildDownloadImageTask(taskID string, params map[string]interface{}) Task {
 	return Task{
-		Id:     taskId,
+		ID:     taskID,
 		Params: params,
 		Execute: func(task *Task, c chan bool) {
 			out, err := os.Create(task.getParams()["outfile"].(string))

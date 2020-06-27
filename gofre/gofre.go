@@ -8,17 +8,18 @@ import (
 type runFunction func(task *Task, c chan bool)
 type checkFunction func(task *Task) bool
 
+// Task is the main Gofre Task struct
 type Task struct {
-	Id        string
+	ID        string
 	Params    map[string]interface{}
 	DependsOn map[string]Task
 	Execute   runFunction
 	Check     checkFunction
 }
 
-func (task *Task) getId() string {
-	if (*task).Id != "" {
-		return (*task).Id
+func (task *Task) getID() string {
+	if (*task).ID != "" {
+		return (*task).ID
 	}
 	return "noname"
 }
@@ -32,7 +33,7 @@ func (task *Task) setParams(params map[string]interface{}) {
 }
 
 func (task *Task) doRun() bool {
-	log.Println("Executing task " + (*task).getId())
+	log.Println("Executing task " + (*task).getID())
 
 	c := make(chan bool)
 	go (*task).Execute(task, c)
@@ -40,7 +41,7 @@ func (task *Task) doRun() bool {
 	ok := false
 
 	if <-c {
-		message := []string{"The task", (*task).getId(), "run well \u2705"}
+		message := []string{"The task", (*task).getID(), "run well \u2705"}
 
 		if (*task).Check != nil {
 			if (*task).Check(task) {
@@ -57,7 +58,7 @@ func (task *Task) doRun() bool {
 
 		log.Println(strings.Join(message, " "))
 	} else {
-		log.Println("The task " + (*task).getId() + " didn't run well \u274C  :(")
+		log.Println("The task " + (*task).getID() + " didn't run well \u274C  :(")
 		ok = false
 	}
 
@@ -68,9 +69,10 @@ func (task *Task) isAlreadyExecuted() bool {
 	return (*task).Check != nil && (*task).Check(task)
 }
 
+// Run is the receiver function that executes the Gofre task
 func (task *Task) Run() bool {
 	if (*task).isAlreadyExecuted() {
-		log.Println("The task " + (*task).Id + " is already executed, skipping \u2705")
+		log.Println("The task " + (*task).ID + " is already executed, skipping \u2705")
 		return true
 	}
 
